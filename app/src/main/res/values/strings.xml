@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">LifecycleAwareDemo</string>
+    <string name="fetch_data">Fetch Data</string>
+    <string name="add_data">Add</string>
+    <string name="saved">Data berhasil disimpan</string>
+    <string name="not_saved">Data gagal disimpan</string>
+    <string name="save">Save</string>
+</resources>
