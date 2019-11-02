@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +19,10 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mrjuoss.lifecycleawaredemo.room.NewNoteActivity;
 import com.mrjuoss.lifecycleawaredemo.room.Note;
+import com.mrjuoss.lifecycleawaredemo.room.NoteAdapter;
 import com.mrjuoss.lifecycleawaredemo.room.NoteViewModel;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int NEW_NOTE_ACTIVITY_REQUEST_CODE = 1;
     private NoteViewModel noteViewModel;
+    private NoteAdapter noteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,17 +45,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         MainActivityViewModel model = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         LiveData<String> number = model.getNumber();
-        final TextView txtRandomNumber = findViewById(R.id.txt_random_number);
+//        final TextView txtRandomNumber = findViewById(R.id.txt_random_number);
 //        String number = getRandomNumber();
-        number.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                txtRandomNumber.setText(s);
-            }
-        });
+//        number.observe(this, new Observer<String>() {
+//            @Override
+//            public void onChanged(String s) {
+//                txtRandomNumber.setText(s);
+//            }
+//        });
 
-        Button btnFetchData = findViewById(R.id.btn_fetch_data);
-        btnFetchData.setOnClickListener(this);
+//        Button btnFetchData = findViewById(R.id.btn_fetch_data);
+//        btnFetchData.setOnClickListener(this);
 
         FloatingActionButton fab = findViewById(R.id.fab_add);
 
@@ -64,6 +69,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
 
+        initRecyclerView();
+
+        noteViewModel.getAllNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                noteAdapter.setNotes(notes);
+            }
+        });
+    }
+
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.rv_note);
+        noteAdapter = new NoteAdapter(this);
+        recyclerView.setAdapter(noteAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
